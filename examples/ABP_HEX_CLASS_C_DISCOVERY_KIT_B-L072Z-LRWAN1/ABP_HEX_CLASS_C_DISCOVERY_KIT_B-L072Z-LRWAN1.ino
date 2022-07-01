@@ -54,7 +54,7 @@ void setup() {
   lora.setDeviceClass(CLASS_C);
 
   // Set Data Rate
-  lora.setDataRate(SF10BW125);
+  lora.setDataRate(SF9BW125);
 
   // Set FramePort Tx
   lora.setFramePortTx(5);

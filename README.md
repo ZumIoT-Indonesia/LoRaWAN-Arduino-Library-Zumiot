@@ -9,6 +9,26 @@ This repository is all based on this [repo]( https://git.antares.id/lorawan-lora
 
 To find out how to use the library itself, see the examples, or see the PDF file in the doc subdirectory.
 
+**THIS LIBRARY IS USING AS923 ONLY**
+Frequency Used
+--------------
+- 921.2 MHz
+- 921.4 MHz
+- 921.6 MHz
+- 921.8 MHz
+- 922.0 MHz
+- 922.8 MHz
+- 921.2 MHz
+- 921.4 MHz
+
+Data Rate Used
+--------------
+DR3 = SF9BW125
+
+Frame Port Used
+---------------
+Frame Port Tx = 5
+
 Features
 --------
 The arduino LoRaWAN library supports LoRaWAN Class A and Class C implementations operating in EU-868, AS-923 and US-915 bands. Note that this library is fairly simple with the aim of demonstrating the LoRaWAN capabilities.
