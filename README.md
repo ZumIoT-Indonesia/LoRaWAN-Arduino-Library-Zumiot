@@ -184,7 +184,7 @@ Setup device address for activating the device.
 
 #### Syntax
 ```c
-void setDevAddr(unsigned char *devAddr_in);
+void setDevAddr(String devAddr_in);
 ```
 
 #### Example
