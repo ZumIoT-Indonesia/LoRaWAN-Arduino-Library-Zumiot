@@ -129,7 +129,7 @@ bool LoRaWANClass::init(void)
 
     //Initialise the SPI port
     if(RFM_pins.loraHSPI)
-        SPI2.begin();
+        SPIH.begin();
     else
         SPI.begin();
 
