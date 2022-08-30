@@ -60,7 +60,7 @@ bool LoRaWANClass::init(void)
     memset(Address_Tx, 0x00, 4);
     memset(NwkSKey, 0x00, 16);
     memset(AppSKey, 0x00, 16);
-    
+
     Frame_Counter_Tx = 0x0000;
     Session_Data.NwkSKey = NwkSKey;
     Session_Data.AppSKey = AppSKey;
@@ -81,10 +81,10 @@ bool LoRaWANClass::init(void)
     OTAA_Data.DevNonce = DevNonce;
     OTAA_Data.AppNonce = AppNonce;
     OTAA_Data.NetID = NetID;
-    
+
     // Device Class
     LoRa_Settings.Mote_Class = 0x00; //0x00 is type A, 0x01 is type C
-    
+
     // Rx
 #if defined(AS_923)
     LoRa_Settings.Datarate_Rx = SF9BW125;   //set to SF10 BW 125 kHz
@@ -117,9 +117,9 @@ bool LoRaWANClass::init(void)
     pinMode(RFM_pins.DIO2,INPUT);
     pinMode(RFM_pins.CS,OUTPUT);
     pinMode(RFM_pins.RST,OUTPUT);
-    
+
     digitalWrite(RFM_pins.CS,HIGH);
-    
+
     // Reset
     digitalWrite(RFM_pins.RST,HIGH);
     delay(10);
@@ -128,15 +128,18 @@ bool LoRaWANClass::init(void)
     digitalWrite(RFM_pins.RST,HIGH);
 
     //Initialise the SPI port
-    SPI.begin();
-    
+    if(RFM_pins.loraHSPI)
+        SPI2.begin();
+    else
+        SPI.begin();
+
     /*** This prevents the use of other SPI devices with different settings ***/
-    //SPI.beginTransaction(SPISettings(4000000,MSBFIRST,SPI_MODE0)); 
+    //SPI.beginTransaction(SPISettings(4000000,MSBFIRST,SPI_MODE0));
 
 
     //Wait until RFM module is started
     delay(50);
-    
+
     //Initialize RFM module
     if(!RFM_Init()){
     return 0;
@@ -145,15 +148,15 @@ bool LoRaWANClass::init(void)
 }
 
 bool LoRaWANClass::join(void)
-{    
+{
     bool join_status;
     const unsigned long timeout = 6000;
     unsigned long prev_millis;
-    unsigned char i = 0; 
+    unsigned char i = 0;
     unsigned char freq_idx;
 
     if (currentChannel == MULTI) {
-        
+
         freq_idx=random(2,4); //921.4MHz and 921.6MHz channel
         LoRa_Settings.Channel_Tx =freq_idx;
         LoRa_Settings.Channel_Rx =freq_idx;
@@ -221,7 +224,7 @@ void LoRaWANClass::setAppSKey(const char *ApskKey_in)
 {
     for (uint8_t i = 0; i < 16; ++i)
         AppSKey[i] = ASCII2Hex(ApskKey_in[i*2],ApskKey_in[(i*2)+1]);
-    
+
     //Reset frame counter
     Frame_Counter_Tx = 0x0000;
 
@@ -268,7 +271,7 @@ void LoRaWANClass::sendUplink(char *data, unsigned int len, unsigned char confir
 
     if(((LoRa_Settings.Channel_Tx == 0)||(LoRa_Settings.Channel_Tx == 1)||(LoRa_Settings.Channel_Tx == 2)||(LoRa_Settings.Channel_Tx == 3)||(LoRa_Settings.Channel_Tx == 4)||(LoRa_Settings.Channel_Tx == 6))&&(drate_common>5))
         LoRa_Settings.Datarate_Tx=0x05;
- 
+
     else if((LoRa_Settings.Channel_Tx==5)&&(drate_common>6))
         LoRa_Settings.Datarate_Tx=0x06;
 
@@ -284,7 +287,7 @@ void LoRaWANClass::sendUplink(char *data, unsigned int len, unsigned char confir
 
     //Set new command for RFM
     RFM_Command_Status = NEW_RFM_COMMAND;
-    
+
     Buffer_Tx.Counter = len;
     memcpy(Buffer_Tx.Data,data,len);
 }
@@ -297,7 +300,7 @@ void LoRaWANClass::sendUplinkHex(byte *data, unsigned int len, unsigned char con
 
     if(((LoRa_Settings.Channel_Tx == 0)||(LoRa_Settings.Channel_Tx == 1)||(LoRa_Settings.Channel_Tx == 2)||(LoRa_Settings.Channel_Tx == 3)||(LoRa_Settings.Channel_Tx == 4)||(LoRa_Settings.Channel_Tx == 6))&&(drate_common>5))
         LoRa_Settings.Datarate_Tx=0x05;
- 
+
     else if((LoRa_Settings.Channel_Tx==5)&&(drate_common>6))
         LoRa_Settings.Datarate_Tx=0x06;
 
@@ -313,7 +316,7 @@ void LoRaWANClass::sendUplinkHex(byte *data, unsigned int len, unsigned char con
 
     //Set new command for RFM
     RFM_Command_Status = NEW_RFM_COMMAND;
-    
+
     Buffer_Tx.Counter = len;
     memcpy(Buffer_Tx.Data,data,len);
 }
@@ -384,7 +387,7 @@ unsigned char LoRaWANClass::getDataRateRx() {
 void LoRaWANClass::setTxPower(unsigned char power_idx)
 {
     unsigned char RFM_Data;
-    LoRa_Settings.Transmit_Power = (power_idx > 0x0F) ? 0x0F : power_idx; 
+    LoRa_Settings.Transmit_Power = (power_idx > 0x0F) ? 0x0F : power_idx;
     RFM_Data = LoRa_Settings.Transmit_Power + 0x80;
     RFM_Write(RFM_REG_PA_CONFIG, RFM_Data);
 }
@@ -403,10 +406,10 @@ int LoRaWANClass::readData(char *outBuff)
         res = Buffer_Rx.Counter;
         memset(outBuff, 0x00, res + 1);
         memcpy(outBuff, Buffer_Rx.Data, res);
-        
+
         // Clear Buffer counter
         Buffer_Rx.Counter = 0x00;
-        
+
         Rx_Status = NO_RX;
     }
 
@@ -422,7 +425,7 @@ int LoRaWANClass::readDataByte(byte *outBuff)
         res = Buffer_Rx.Counter;
         memset(outBuff, 0x00, res + 1);
         memcpy(outBuff, Buffer_Rx.Data, res);
-         
+
         // Clear Buffer counter
         Buffer_Rx.Counter = 0x00;
         Rx_Status = NO_RX;
@@ -444,7 +447,7 @@ void LoRaWANClass::update(void)
       {
         Rx_Status = NEW_RX;
       }
-      
+
       RFM_Command_Status = NO_RFM_COMMAND;
     }
 
@@ -453,7 +456,7 @@ void LoRaWANClass::update(void)
     {
        //Transmit
       if(RFM_Command_Status == NEW_RFM_COMMAND)
-      {     
+      {
         //Lora send data
         LORA_Send_Data(&Buffer_Tx, &Session_Data, &LoRa_Settings);
 
@@ -483,7 +486,7 @@ void LoRaWANClass::randomChannel()
     // limit drate, ch 5-> Datarate 6 (sf7bw250)
     // LoRa_Settings.Datarate_Tx = freq_idx == 0x05? 0x06 : drate_common;
 
-   
+
 #endif
     if(LoRa_Settings.Mote_Class==CLASS_A)
     {
@@ -508,7 +511,7 @@ int LoRaWANClass::getFramePortRx()
 {
     int port;
     port=Message_Rx.Frame_Port;
-    return port;      
+    return port;
 }
 
 int LoRaWANClass::getFramePortTx()
@@ -523,5 +526,5 @@ void LoRaWANClass::setFramePortTx(unsigned int port) {
 }
 
 
-// define lora objet 
+// define lora objet
 LoRaWANClass lora;
