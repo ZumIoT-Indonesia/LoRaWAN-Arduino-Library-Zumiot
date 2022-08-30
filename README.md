@@ -120,9 +120,16 @@ Pin mapping
 As described above, most connections can use arbitrary I/O pins on the
 Arduino side. To tell the arduino LoRaWAN library about these, a pin mapping struct is used in the sketch file.
 
+***ADDED**
+Support ESP32 HSPI and VSPI with variable .loraHSPI as parameter
+- .loraHSPI = false -> Using VSPI
+- .loraHSPI = true  -> Using HSPI
+* **loraHSPI must defined**
+
 For example, this could look like this:
 
 	sRFM_pins RFM_pins = {
+        .loraHSPI = false,
 	  	.CS = SS,
 	  	.RST = RFM_RST,
 	  	.DIO0 = RFM_DIO0,
