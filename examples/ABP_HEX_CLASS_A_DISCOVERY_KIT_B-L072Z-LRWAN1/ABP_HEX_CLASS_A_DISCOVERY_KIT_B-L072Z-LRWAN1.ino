@@ -29,6 +29,7 @@ int port, channel, freq;
 bool newmessage = false;
 
 const sRFM_pins RFM_pins = {
+  .loraHSPI = false,
   .CS = PA15,
   .RST = PC0,
   .DIO0 = PB4,
