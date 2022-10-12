@@ -212,7 +212,7 @@ void LoRaWANClass::setAppKey(const char *appKey_in)
 
 }
 
-void LoRaWANClass::setNwkSKey(const char *NwkKey_in)
+void LoRaWANClass::setNwkSKey(String NwkKey_in)
 {
     for (uint8_t i = 0; i < 16; ++i)
         NwkSKey[i] = ASCII2Hex(NwkKey_in[i*2],NwkKey_in[(i*2)+1]);
@@ -224,7 +224,7 @@ void LoRaWANClass::setNwkSKey(const char *NwkKey_in)
     RFM_Command_Status = NO_RFM_COMMAND;
 }
 
-void LoRaWANClass::setAppSKey(const char *ApskKey_in)
+void LoRaWANClass::setAppSKey(String ApskKey_in)
 {
     for (uint8_t i = 0; i < 16; ++i)
         AppSKey[i] = ASCII2Hex(ApskKey_in[i*2],ApskKey_in[(i*2)+1]);

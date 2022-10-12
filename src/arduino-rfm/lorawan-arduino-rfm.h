@@ -69,8 +69,8 @@ class LoRaWANClass
         void setAppEUI(const char *appEUI_in);
         void setAppKey(const char *appKey_in);
         // ABP credentials
-        void setNwkSKey(const char *NwkKey_in);
-        void setAppSKey(const char *ApskKey_in);
+        void setNwkSKey(String NwkKey_in);
+        void setAppSKey(String ApskKey_in);
         void setDevAddr(String devAddr_in);
         void sendUplink(char *data, unsigned int len, unsigned char confirm);
         void sendUplinkHex(byte *data, unsigned int len, unsigned char confirm);
