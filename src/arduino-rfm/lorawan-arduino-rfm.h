@@ -64,6 +64,7 @@ class LoRaWANClass
         bool init(void);
         bool join(void);
         void setDeviceClass(devclass_t dev_class);
+        void setDeviceClass(uint8_t dev_class);
         // OTAA credentials
         void setDevEUI(const char *devEUI_in);
         void setAppEUI(const char *appEUI_in);
