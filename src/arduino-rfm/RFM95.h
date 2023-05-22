@@ -36,6 +36,13 @@
 */
 
 #include "Struct.h"
+// #include <SPI.h>
+
+
+// //make it for ESP32
+// #ifdef ESP32
+//   extern SPIClass SPIH(HSPI);
+// #endif
 
 /*
 *****************************************************************************************

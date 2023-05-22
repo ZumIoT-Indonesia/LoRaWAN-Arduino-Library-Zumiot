@@ -128,7 +128,7 @@ bool LoRaWANClass::init(void)
     digitalWrite(RFM_pins.RST,HIGH);
 
     //Initialise the SPI port
-    #if defined(DUAL_SPI)
+    #ifdef ESP32
     if(RFM_pins.loraHSPI)
         SPIH.begin();
     else

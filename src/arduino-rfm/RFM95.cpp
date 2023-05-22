@@ -31,6 +31,11 @@
 #include "RFM95.h"
 #include "Config.h"
 
+//make it for ESP32
+#ifdef ESP32
+  SPIClass SPIH(HSPI);
+#endif
+
 /**
  *  Lora Frequencies
  */
@@ -62,7 +67,7 @@ static unsigned char RFM_Read(unsigned char RFM_Address)
 {
   unsigned char RFM_Data;
 
-  #if defined(DUAL_SPI)
+  #ifdef ESP32
   if(RFM_pins.loraHSPI)
   {
     //Add transactions in Read and Write methods
@@ -467,7 +472,7 @@ void RFM_Write(unsigned char RFM_Address, unsigned char RFM_Data)
     Serial.println(RFM_Data, HEX);
   #endif
 
-  #if defined(DUAL_SPI)
+  #ifdef ESP32
   if(RFM_pins.loraHSPI)
   {
     //Add transactions in Read and Write methods
